@@ -112,60 +112,69 @@ export default function Home() {
           animate={{ height: isScrolled ? '80px' : '120px' }}
         >
           <div className="container mx-auto px-4">
-            <div className="flex justify-between items-center h-16">
-              <motion.h1 
-                className="font-bold relative"
-                animate={{ fontSize: isScrolled ? '1.5rem' : '2rem' }}
-              >
-                Nordic.AI
-                <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-black"></span>
-                <span className="absolute -bottom-2 left-0 w-3/4 h-[0.5px] bg-black"></span>
-              </motion.h1>
-              <p className="text-sm text-gray-600 italic">No login or registration is required!</p>
+            <div className="flex flex-col justify-between items-center h-full py-2 sm:py-4">
+              <div className="flex flex-col sm:flex-row items-center w-full justify-between">
+                <motion.h1 
+                  className="font-bold relative text-2xl sm:text-3xl mb-2 sm:mb-0"
+                  animate={{ fontSize: isScrolled ? '1.5rem' : '2rem' }}
+                >
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+                    PromptLib
+                  </span>
+                  <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-black"></span>
+                  <span className="absolute -bottom-2 left-0 w-3/4 h-[0.5px] bg-black"></span>
+                </motion.h1>
+                <motion.p 
+                  className="text-xs sm:text-sm font-semibold bg-black text-white px-2 sm:px-3 py-1 rounded-full border-2 border-white shadow-md mb-2 sm:mb-0"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  No login or registration required!
+                </motion.p>
+              </div>
+              <form onSubmit={handleSearch} className="w-full mt-2 sm:mt-0">
+                <div className="flex items-center border-2 border-black bg-white">
+                  <span className="pl-2 text-xl font-bold">$</span>
+                  <input
+                    type="text"
+                    placeholder="Search prompts..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full p-2 bg-transparent focus:outline-none text-base"
+                  />
+                  <button
+                    type="submit"
+                    className="p-2 text-black hover:text-gray-600 transition-colors duration-300"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                </div>
+              </form>
             </div>
-            <form onSubmit={handleSearch} className="relative py-2">
-              <input
-                type="text"
-                placeholder="Search AI art..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full p-2 pl-8 bg-white border-2 border-black rounded-none text-black focus:outline-none focus:ring-2 focus:ring-blue-300 text-base transition-all duration-300"
-              />
-              <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-xl font-bold">$</span>
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-black hover:text-gray-600 transition-colors duration-300"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-            </form>
           </div>
         </motion.header>
 
-        <main className="container mx-auto px-6 py-8"> {/* Increased horizontal padding */}
+        <main className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
           <motion.div
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="mb-8"
+            className="mb-4 sm:mb-8"
           >
-            <div className="flex flex-wrap gap-3 justify-center">
+            <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
               {tags.map((tag) => (
                 <motion.button
                   key={tag}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleTagToggle(tag)}
-                  className={`px-4 py-2 text-base transition-all duration-200 border-2 ${
+                  className={`px-3 sm:px-4 py-1 sm:py-2 text-sm sm:text-base transition-all duration-200 border-2 ${
                     selectedTags.includes(tag)
                       ? 'bg-black text-white border-black'
                       : 'bg-white text-black border-black hover:bg-gray-100'
                   }`}
-                  style={{
-                    boxShadow: selectedTags.includes(tag) ? 'inset 0 0 0 1px white' : 'none'
-                  }}
                 >
                   {tag}
                 </motion.button>
@@ -177,7 +186,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" // Increased gap
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           >
             {paginatedProducts.map((product, index) => (
               <motion.div 
@@ -190,7 +199,7 @@ export default function Home() {
                   boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
                   transition: { duration: 0.2 }
                 }}
-                className="bg-white overflow-hidden shadow-md cursor-pointer border-2 border-black hover:shadow-lg transition-all duration-300 relative flex flex-col h-[220px]" // Increased height
+                className="bg-white overflow-hidden shadow-md cursor-pointer border-2 border-black hover:shadow-lg transition-all duration-300 relative flex flex-col h-[200px] sm:h-[220px]"
                 onClick={() => setSelectedProduct(product)}
               >
                 <div className="absolute top-0 left-0 w-full h-[0.5px] bg-black"></div>
@@ -237,7 +246,7 @@ export default function Home() {
 
         {/* Add copyright information at the bottom of the page */}
         <div className="text-xs text-gray-500 py-4 text-center border-t border-gray-200 mt-8">
-          © 2023 Nordic.AI | All rights reserved
+          © 2023 PromptLib | All rights reserved
         </div>
 
         <AnimatePresence>
