@@ -14,20 +14,38 @@ interface ChatResponse {
   }[];
 }
 
+// 不同类型的系统提示词
+const SYSTEM_PROMPTS = {
+  text: `You are a prompt engineering expert specializing in creating text generation prompts. 
+Your task is to help users create effective prompts for language models.
+- Analyze user requirements carefully
+- Create clear and structured prompts
+- Focus on key elements like context, tone, and desired outcome
+- Provide explanations for your choices
+- Suggest improvements when possible`,
+
+  image: `You are a prompt engineering expert specializing in text-to-image prompts. 
+Your task is to help users create effective prompts for image generation models like Midjourney or DALL-E.
+- Help users describe their desired images in detail
+- Include important aspects like:
+  * Subject matter and composition
+  * Art style (e.g., realistic, anime, oil painting)
+  * Lighting and atmosphere
+  * Color palette and mood
+  * Camera angle and perspective
+  * Quality modifiers (e.g., highly detailed, 4K, professional)
+- Suggest improvements to make the image more vivid
+- Format the prompt in a way that works well with image generation models`
+};
+
 export async function generatePrompt(userInput: string, type: 'text' | 'image'): Promise<string> {
   try {
-    // 检查 API Key
     if (!API_KEY) {
       console.error('DeepSeek API key is missing');
       return "Configuration error: API key is missing. Please check your setup.";
     }
 
     console.log('Generating prompt:', { type, userInput });
-    console.log('Using API Key:', API_KEY.substring(0, 4) + '...');  // 只显示前4位
-
-    const systemPrompt = type === 'text' 
-      ? "You are a prompt engineering expert. Create clear, detailed prompts based on user requirements. Focus on text generation tasks."
-      : "You are a prompt engineering expert for image generation. Create detailed image prompts that will help users generate the images they want. Include aspects like style, mood, lighting, and composition.";
 
     const response = await fetch(`${API_BASE_URL}/chat/completions`, {
       method: 'POST',
@@ -40,25 +58,22 @@ export async function generatePrompt(userInput: string, type: 'text' | 'image'):
         messages: [
           {
             role: 'system',
-            content: systemPrompt
+            content: SYSTEM_PROMPTS[type]
           },
           {
             role: 'user',
             content: userInput
           }
         ],
-        temperature: 0.7,
+        temperature: type === 'image' ? 0.8 : 0.7, // 图像提示词可以更有创意
         max_tokens: 2000
       })
     });
-
-    console.log('Response status:', response.status);
 
     if (!response.ok) {
       const errorData = await response.json();
       console.error('API Error Details:', errorData);
       
-      // 处理特定的错误情况
       if (errorData.error?.type === 'authentication_error') {
         return "Authentication failed. Please check your API key configuration.";
       }

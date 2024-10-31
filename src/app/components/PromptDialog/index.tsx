@@ -16,6 +16,16 @@ interface PromptDialogProps {
   type: 'text' | 'image';
 }
 
+const INITIAL_MESSAGES = {
+  text: "I'm your AI prompt engineering assistant. Let's create a perfect text prompt together. What kind of text would you like to generate? 🎯",
+  image: "I'm your AI image prompt expert. I'll help you create detailed prompts for image generation. What kind of image do you want to create? Consider aspects like style, subject, mood, and composition. 🎨"
+};
+
+const PLACEHOLDERS = {
+  text: "e.g., 'I need a prompt to generate a professional email...'",
+  image: "e.g., 'I want to create an image of a futuristic city at sunset...'"
+};
+
 export const PromptDialog: React.FC<PromptDialogProps> = ({
   isOpen,
   onClose,
@@ -25,13 +35,21 @@ export const PromptDialog: React.FC<PromptDialogProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: type === 'text' 
-        ? "I'm your AI prompt engineering assistant. Let's create a perfect text prompt together. What's your goal? 🎯"
-        : "I'm your AI image prompt expert. Let's craft an amazing image prompt together. What kind of image are you envisioning? 🎨"
+      content: INITIAL_MESSAGES[type]
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // 当类型改变时重置消息
+  React.useEffect(() => {
+    setMessages([
+      {
+        role: 'assistant',
+        content: INITIAL_MESSAGES[type]
+      }
+    ]);
+  }, [type]);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -53,12 +71,20 @@ export const PromptDialog: React.FC<PromptDialogProps> = ({
       console.error('Error:', error);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: "I encountered an error. Let's try again! 🔄" 
+        content: type === 'text' 
+          ? "I encountered an error. Let's try creating your text prompt again! 🔄"
+          : "I encountered an error. Let's try crafting your image prompt again! 🎨" 
       }]);
     } finally {
       setIsLoading(false);
       scrollToBottom();
     }
+  };
+
+  const getGradientClass = () => {
+    return type === 'text'
+      ? 'from-blue-600 to-blue-500'
+      : 'from-rose-500 to-orange-500';
   };
 
   return (
@@ -95,7 +121,11 @@ export const PromptDialog: React.FC<PromptDialogProps> = ({
             >
               {/* 动态背景效果 */}
               <div className="absolute inset-0">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.3),rgba(255,0,0,0))]" />
+                <div className={`absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,${
+                  type === 'text' 
+                    ? 'rgba(37,99,235,0.2)' 
+                    : 'rgba(244,63,94,0.2)'
+                },rgba(0,0,0,0))]`} />
                 <motion.div
                   animate={{
                     backgroundPosition: ['0% 0%', '100% 100%'],
@@ -123,13 +153,16 @@ export const PromptDialog: React.FC<PromptDialogProps> = ({
                   >
                     {type === 'text' ? '✍️' : '🎨'}
                   </motion.span>
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r 
-                                 from-blue-400 via-purple-400 to-pink-400">
+                  <span className={`bg-clip-text text-transparent bg-gradient-to-r ${
+                    type === 'text'
+                      ? 'from-blue-400 via-blue-500 to-blue-600'
+                      : 'from-rose-400 via-orange-400 to-orange-500'
+                  }`}>
                     {type === 'text' ? 'Text Prompt Writer' : 'Image Prompt Writer'}
                   </span>
                 </Dialog.Title>
                 
-                {/* 改进的关闭按钮 */}
+                {/* 关闭按钮 */}
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
@@ -164,7 +197,7 @@ export const PromptDialog: React.FC<PromptDialogProps> = ({
                   >
                     <div className={`max-w-[80%] p-4 rounded-2xl backdrop-blur-sm ${
                       message.role === 'user'
-                        ? 'bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/20'
+                        ? `bg-gradient-to-r ${getGradientClass()} shadow-lg shadow-${type === 'text' ? 'blue' : 'rose'}-500/20`
                         : 'bg-gradient-to-r from-gray-700 to-gray-600 shadow-lg shadow-purple-500/10'
                     }`}>
                       <div>
@@ -196,7 +229,7 @@ export const PromptDialog: React.FC<PromptDialogProps> = ({
                     type="text"
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
-                    placeholder={isLoading ? "AI is thinking..." : "Type your message..."}
+                    placeholder={isLoading ? "AI is thinking..." : PLACEHOLDERS[type]}
                     disabled={isLoading}
                     className="flex-1 px-4 py-3 bg-gray-800/50 border-2 border-gray-700/50 
                              rounded-xl focus:outline-none focus:border-blue-500/50 
@@ -208,13 +241,16 @@ export const PromptDialog: React.FC<PromptDialogProps> = ({
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={isLoading}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 
-                             text-white rounded-xl transition-all duration-200 
-                             font-medium shadow-lg shadow-blue-500/20 
-                             hover:shadow-blue-500/40 hover:from-blue-600 
-                             hover:via-purple-600 hover:to-pink-600
-                             disabled:opacity-50 disabled:cursor-not-allowed
-                             flex items-center gap-2"
+                    className={`px-6 py-3 bg-gradient-to-r ${
+                      type === 'text'
+                        ? 'from-blue-500 via-blue-600 to-blue-700'
+                        : 'from-rose-500 via-orange-500 to-orange-600'
+                    }
+                    text-white rounded-xl transition-all duration-200 
+                    font-medium shadow-lg shadow-${type === 'text' ? 'blue' : 'rose'}-500/20 
+                    hover:shadow-${type === 'text' ? 'blue' : 'rose'}-500/40
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    flex items-center gap-2`}
                   >
                     {isLoading ? (
                       <>
@@ -228,8 +264,8 @@ export const PromptDialog: React.FC<PromptDialogProps> = ({
                       </>
                     ) : (
                       <>
-                        <span>✨</span>
-                        <span>Send</span>
+                        <span>{type === 'text' ? '✍️' : '🎨'}</span>
+                        <span>Generate</span>
                       </>
                     )}
                   </motion.button>
@@ -243,4 +279,4 @@ export const PromptDialog: React.FC<PromptDialogProps> = ({
   );
 };
 
-export default PromptDialog; 
+export default PromptDialog;
