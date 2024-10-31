@@ -11,6 +11,7 @@ import { Toast } from '@/app/components/Toast/Toast'
 import { TechBackground } from '@/app/components/Background/TechBackground'
 import { Footer } from '@/app/components/Footer/Footer'
 import ProductDialog from '@/app/components/ProductGrid/ProductDialog'
+import PromptButtons from './components/PromptButtons'
 
 // Types and Data
 import { Product } from '@/app/types'
@@ -91,6 +92,10 @@ export default function Home() {
         
         {/* Main Content */}
         <main className="relative z-10 container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+          <div className="mt-2">
+            <PromptButtons />
+          </div>
+          
           <TagList 
             selectedTags={selectedTags} 
             onTagToggle={handleTagToggle} 
