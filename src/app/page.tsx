@@ -41,13 +41,13 @@ export default function Home() {
   }, [scrollY])
 
   // Handlers
-  const handleTagToggle = (tag: string) => {
-    console.log('Tag clicked:', tag);
+  const handleTagToggle = (tagName: string, tagId: number) => {
+    console.log('Tag clicked:', tagName, 'ID:', tagId);
     setSelectedTags(prev => {
-      if (prev.includes(tag)) {
-        return prev.filter(t => t !== tag);
+      if (prev.includes(tagName)) {
+        return prev.filter(t => t !== tagName);
       } else {
-        return [...prev, tag];
+        return [...prev, tagName];
       }
     });
     setCurrentPage(1);
@@ -92,7 +92,6 @@ export default function Home() {
         {/* Main Content */}
         <main className="relative z-10 container mx-auto px-2 sm:px-4 py-4 sm:py-8">
           <TagList 
-            tags={TAGS} 
             selectedTags={selectedTags} 
             onTagToggle={handleTagToggle} 
           />

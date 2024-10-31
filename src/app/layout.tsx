@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './styles/globals.css'
 
 export const metadata: Metadata = {
@@ -6,7 +6,18 @@ export const metadata: Metadata = {
   description: 'A collection of useful AI prompts for various purposes',
   keywords: ['AI', 'Prompts', 'ChatGPT', 'Machine Learning'],
   authors: [{ name: 'PromptLib Team' }],
-  viewport: 'width=device-width, initial-scale=1',
+}
+
+// 分离视口配置
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: 'white' },
+    { media: '(prefers-color-scheme: dark)', color: 'black' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 }
 
 interface RootLayoutProps {
@@ -16,9 +27,6 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
       <body className="min-h-screen bg-gray-50 antialiased">
         {children}
       </body>
