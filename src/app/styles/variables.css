@@ -1,0 +1,14 @@
+:root {
+  /* Colors */
+  --primary: #0070f3;
+  --secondary: #7928ca;
+  --success: #0070f3;
+  --error: #ff0000;
+  
+  /* Spacing */
+  --container-padding: 2rem;
+  --header-height: 80px;
+  
+  /* Transitions */
+  --transition-base: 0.2s ease-in-out;
+} 
