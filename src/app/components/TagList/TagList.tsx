@@ -14,6 +14,11 @@ export const TagList: React.FC<TagListProps> = ({
   selectedTags, 
   onTagToggle 
 }) => {
+  const handleClick = (tag: string) => {
+    console.log('Tag clicked:', tag); // 调试用
+    onTagToggle(tag);
+  };
+
   return (
     <motion.div
       initial={{ y: 50, opacity: 0 }}
@@ -27,15 +32,16 @@ export const TagList: React.FC<TagListProps> = ({
             key={tag}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => onTagToggle(tag)}
+            onClick={() => handleClick(tag)}
             className={`
               px-4 py-2
               text-sm font-medium
               transition-all duration-200
               border-2 border-black
+              cursor-pointer
               ${
                 selectedTags.includes(tag)
-                  ? 'bg-black text-white'
+                  ? 'bg-black text-white shadow-md'
                   : 'bg-white text-black hover:bg-gray-50'
               }
             `}
