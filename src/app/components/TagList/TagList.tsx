@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
 
 interface TagListProps {
   tags: string[];
@@ -14,26 +13,15 @@ export const TagList: React.FC<TagListProps> = ({
   selectedTags, 
   onTagToggle 
 }) => {
-  const handleClick = (tag: string) => {
-    console.log('Tag clicked:', tag); // 调试用
-    onTagToggle(tag);
-  };
-
   return (
-    <motion.div
-      initial={{ y: 50, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 0.2, duration: 0.5 }}
-      className="mb-4 sm:mb-8 mt-4"
-    >
+    <div className="relative z-10 mb-4 sm:mb-8 mt-4">
       <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
         {tags.map((tag) => (
-          <motion.button
+          <button
             key={tag}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => handleClick(tag)}
+            onClick={() => onTagToggle(tag)}
             className={`
+              relative z-10
               px-4 py-2
               text-sm font-medium
               transition-all duration-200
@@ -41,17 +29,17 @@ export const TagList: React.FC<TagListProps> = ({
               cursor-pointer
               ${
                 selectedTags.includes(tag)
-                  ? 'bg-black text-white shadow-md'
+                  ? 'bg-black text-white'
                   : 'bg-white text-black hover:bg-gray-50'
               }
             `}
           >
             {tag}
-          </motion.button>
+          </button>
         ))}
       </div>
-    </motion.div>
+    </div>
   )
 }
 
-export default TagList 
+export default TagList

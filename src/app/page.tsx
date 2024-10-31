@@ -42,13 +42,16 @@ export default function Home() {
 
   // Handlers
   const handleTagToggle = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
-    )
-    setCurrentPage(1)
-  }
+    console.log('Tag clicked:', tag);
+    setSelectedTags(prev => {
+      if (prev.includes(tag)) {
+        return prev.filter(t => t !== tag);
+      } else {
+        return [...prev, tag];
+      }
+    });
+    setCurrentPage(1);
+  };
 
   const handleCopy = async () => {
     if (!selectedProduct) return
@@ -76,7 +79,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="bg-gray-100 min-h-screen text-black font-sans relative overflow-hidden pt-[120px] flex flex-col">
+      <div className="relative bg-gray-100 min-h-screen text-black font-sans overflow-hidden pt-[120px] flex flex-col">
         <TechBackground />
         
         {/* Header */}
@@ -87,7 +90,7 @@ export default function Home() {
         />
         
         {/* Main Content */}
-        <main className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        <main className="relative z-10 container mx-auto px-2 sm:px-4 py-4 sm:py-8">
           <TagList 
             tags={TAGS} 
             selectedTags={selectedTags} 
@@ -104,7 +107,7 @@ export default function Home() {
             <div className="text-center mt-8 mb-8">
               <button
                 onClick={() => setCurrentPage(prev => prev + 1)}
-                className="px-8 py-3 bg-black text-white text-lg font-medium
+                className="relative z-10 px-8 py-3 bg-black text-white text-lg font-medium
                          rounded-lg hover:bg-gray-800 transition-all duration-300 
                          shadow-md hover:shadow-xl transform hover:-translate-y-1"
               >
